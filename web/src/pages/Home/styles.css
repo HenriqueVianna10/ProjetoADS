@@ -1,7 +1,6 @@
 #page-home {
     height: 100vh;
-  
-    background: url("../../assets/home-background.svg") no-repeat 700px bottom;
+    background: url("../../assets/background.png") no-repeat 680px bottom;
   }
   
   #page-home .content {
