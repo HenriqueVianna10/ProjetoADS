@@ -2,9 +2,10 @@ import React, { useState,  useEffect } from 'react';
 import Constants from 'expo-constants';
 import { Feather as Icon } from '@expo/vector-icons';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { SvgUri } from 'react-native-svg';
+import * as Location from 'expo-location';
 import api from '../../services/api';
 
 interface Item {
@@ -13,16 +14,64 @@ interface Item {
   image_url: string;
 }
 
+interface Point {
+  id: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+  image_url: string;
+}
+
 const Points = () => {
     const [items, setItems] = useState<Item[]>([]);
+    const [points, setPoints] = useState<Point[]>([]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
+    const [initialPosition, setInitialPosition] = useState<[number, number]>([0,0]);
+
+
     const navigation = useNavigation();
+
+    useEffect(() => {
+      async function loadPosition() {
+        const { status } = await Location.requestPermissionsAsync();
+
+        if (status !== 'granted') {
+            Alert.alert('O E-Vacina precisa da sua permissão para obter sua localização. :)');
+            return;
+        }
+
+        const location = await Location.getCurrentPositionAsync();
+
+        const { latitude, longitude } = location.coords;
+
+        setInitialPosition([
+          latitude,
+          longitude
+        ])
+      }
+
+      loadPosition();
+    }, []);
+
 
     useEffect(() => {
       api.get('items').then(response => {
         setItems(response.data);
       });
     }, []);
+
+    useEffect(() => {
+      api.get('points', {
+        params: {
+          city: 'Porto Alegre',
+          uf: 'RS',
+          items: [1,2]
+        }
+    }).then(response => {
+      setPoints(response.data);
+    })
+  }, []);
 
     function handleNavigateBack() {
         navigation.goBack();
@@ -55,32 +104,37 @@ const Points = () => {
         <Text style={styles.description}>Encontre um Posto de Saúde no Mapa.</Text>
 
         <View style={styles.mapContainer}>
-          <MapView 
+          { initialPosition[0] !== 0 && (
+            <MapView 
             style={styles.map} 
+            loadingEnabled={initialPosition[0] === 0}
             initialRegion={{
-              latitude: -30.1106387,
-              longitude: -51.2317813,
+              latitude: initialPosition[0],
+              longitude: initialPosition[1],
               latitudeDelta: 0.014,
               longitudeDelta: 0.014,
             }}
             >
-              <Marker 
-              style={styles.mapMarker}
-              onPress={handleNavigateToDetail}
-              coordinate={{ 
-                latitude: -30.1106387,
-                longitude: -51.2317813,
-              }}
-              >
-                <View style={styles.mapMarkerContainer}>
-                <Image style={styles.mapMarkerImage} source={{ 
-                  uri: 'https://images.unsplash.com/photo-1581360742512-021d5b2157d8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60'
+              {points.map(point => (
+                <Marker 
+                key={String(point.id)}
+                style={styles.mapMarker}
+                onPress={handleNavigateToDetail}
+                coordinate={{ 
+                  latitude: point.latitude,
+                  longitude: point.longitude,
                 }}
-                />
-                <Text style={styles.mapMarkerTitle}>Posto</Text>
-                </View>
-              </Marker>
+                >
+                  <View style={styles.mapMarkerContainer}>
+                  <Image style={styles.mapMarkerImage} 
+                  source={{ uri: point.image_url }}
+                  />
+                  <Text style={styles.mapMarkerTitle}>{point.name}</Text>
+                  </View>
+                </Marker>
+              ))}
           </MapView>
+          )}
         </View>
     </View>
     <View style={styles.itemsContainer}> 
