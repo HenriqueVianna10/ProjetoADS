@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
 import {
     View,
@@ -6,35 +6,63 @@ import {
     Text,
     StyleSheet,
     Image,
+    TextInput,
+    KeyboardAvoidingView, Platform
   } from "react-native";
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native'
 
 
 const Home = () => {
+  const [uf, setUF] = useState('');
+  const [city, setCity] = useState('');
   const navigation = useNavigation();
 
 
   function handleNavigateToPoints(){
-    navigation.navigate('Points');
+    navigation.navigate('Points', {
+      uf,
+      city
+    });
   }
 
 
-
-
     return (
+            <KeyboardAvoidingView 
+            style={ {flex: 1 }} 
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <ImageBackground 
               source={require('../../assets/home-background.png')} 
               style={styles.container}
               
               >
                 <View style={styles.main}> 
-                <Image source={require('../../assets/sus-logo.png')} />
-                <Text style={styles.title}>E-Vacina</Text>
-                <Text style={styles.description}>Encontre as Vacinas Disponíveis na Sua Região.</Text>
+                  <Image source={require('../../assets/sus-logo.png')} />
+                    <View>
+                      <Text style={styles.title}>E-Vacina</Text>
+                      <Text style={styles.description}>Encontre Vacinas Na Sua Região</Text>
+                    </View>
                 </View>
 
               <View style={styles.footer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Digite a UF"
+                  value={uf}
+                  maxLength={2}
+                  autoCapitalize="characters"
+                  autoCorrect={false}
+                  onChangeText={setUF}
+                  />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Digite a Cidade"
+                  value={city}
+                  autoCorrect={false}
+                  onChangeText={setCity}
+                  />
+
                 <RectButton style={styles.button} onPress={handleNavigateToPoints}> 
                   <View style={styles.buttonIcon}> 
                    <Text> 
@@ -50,6 +78,7 @@ const Home = () => {
                 </RectButton>
               </View>
             </ImageBackground>
+          </KeyboardAvoidingView>
         );
 };
 
@@ -71,15 +100,15 @@ const styles = StyleSheet.create({
       fontSize: 45,
       fontFamily: "Ubuntu_700Bold",
       maxWidth: 260,
-      marginTop: 200,
+      marginTop: 190,
     },
   
     description: {
       color: "#322153",
       fontSize: 19,
-      marginTop: 120,
+      marginTop: 20,
       fontFamily: "Roboto_400Regular",
-      maxWidth: 260,
+      maxWidth: 280,
       lineHeight: 24,
     },
   
@@ -92,7 +121,7 @@ const styles = StyleSheet.create({
       backgroundColor: "#FFF",
       borderRadius: 10,
       marginBottom: 8,
-      paddingHorizontal: 24,
+      paddingHorizontal: 16,
       fontSize: 16,
     },
   
