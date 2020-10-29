@@ -2,7 +2,7 @@
 Projeto Final de Análise e Desenvolvimento de Sistemas
 
 💻 Sobre o projeto
-E-Vacina é uma forma de conectar usuários do sus e postos de saúde trazendo informações sobre vacinas, para auxiliar no cuidado de todos e mantendo a população saudável.
+E-Vacina é uma forma de conectar usuários do SUS e postos de saúde trazendo informações sobre vacinas, para auxiliar no cuidado de todos e mantendo a população saudável.
 
 Os Postos de Saúde serão cadastrados dessa forma:
 
