@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import { View, StyleSheet, TouchableOpacity, Image, Text, SafeAreaView, Linking } from 'react-native';
 import { Feather as Icon, FontAwesome } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { View, StyleSheet,Text, TouchableOpacity, Image, SafeAreaView, Linking} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { RectButton } from 'react-native-gesture-handler';
 import api from '../../services/api';
 import * as MailComposer from 'expo-mail-composer';
 
 interface Params {
   point_id: number;
-
 }
 
 interface Data {
@@ -26,73 +25,73 @@ interface Data {
 }
 
 const Detail = () => {
-  const [data, setData] = useState<Data>({} as Data);
+    const [data, setData] = useState<Data>({} as Data);
 
-  const navigation = useNavigation();
-  const route = useRoute();
+    const navigation = useNavigation();
+    const route = useRoute();
 
-  const routeParams = route.params as Params;
+    const routeParams = route.params as Params;
 
-  useEffect(() => {
-    api.get(`points/${routeParams.point_id}`).then(response => {
-        setData(response.data);
-    });
-  }, []);
+    useEffect(() => {
+      api.get(`points/${routeParams.point_id}`).then(response => {
+          setData(response.data);
+      });
+    }, []);
 
-  function handleNavigateBack() {
-    navigation.goBack();
-  }
+    function handleNavigateBack() {
+        navigation.goBack();
+      }
 
-  function handleWhatsapp() {
-      Linking.openURL(`whatsapp://send?phone=${data.point.whatsapp}&text=Olá queria saber mais sobre as vacinas`);
-  }
+      function handleWhatsapp() {
+        Linking.openURL(`whatsapp://send?phone=${data.point.whatsapp}&text=Olá, queria saber mais sobre as vacinas`);
+    }
 
-  function handleComposeMail() {
-    MailComposer.composeAsync({
-      subject: 'Quer Ter Mais Informações?',
-      recipients: [data.point.email], 
-    })
-  }
+    function handleComposeMail() {
+        MailComposer.composeAsync({
+          subject: 'Quer Ter Mais Informações?',
+          recipients: [data.point.email], 
+        })
+      }
+    
 
-  if (!data.point) {
-      return null;
-  }
+      if (!data.point) {
+        return null;
+    }
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handleNavigateBack}>
-          <Icon name="arrow-left" size={20} color= "#34cb79" />
-        </TouchableOpacity>
+    return (
+      <SafeAreaView style={{flex: 1}}>
+          <View style={styles.container}>
+            <TouchableOpacity onPress={handleNavigateBack}>
+                <Icon name="arrow-left" size={20} color="#005bab" />
+            </TouchableOpacity>
 
-        <Image style={styles.pointImage} source={{ uri: data.point.image  }} />
+            <Image style={styles.pointImage} source={{ uri: data.point.image }} />
 
-        <Text style={styles.pointName}>{data.point.name}</Text>
-        <Text style={styles.pointItems}>
-          {data.items.map(item => item.title).join(', ')}
-        </Text>
+            <Text style={styles.pointName}>{data.point.name}</Text>
+            <Text style={styles.pointItems}>
+              {data.items.map(item => item.title).join(', ')}
+            </Text>
+            <View style={styles.address}>
+                <Text style={styles.addressTitle}>Endereço</Text>
+                <Text style={styles.addressContent}>{data.point.city}, {data.point.uf}</Text>
+            </View>
+          </View>
 
-        <View style={styles.address}>
-          <Text style={styles.addressTitle}>Endereço</Text>
-          <Text style={styles.addressContent}>{data.point.city}, {data.point.uf}</Text>
-        </View>
-      </View> 
-      <View style={styles.footer}>
-        <RectButton style={styles.button} onPress={handleWhatsapp}>
-          <FontAwesome name="whatsapp" size={20} color="#FFF" />
-          <Text style={styles.buttonText}>Telefone</Text>
-        </RectButton>
+          <View style={styles.footer}>
+              <RectButton style={styles.button} onPress={handleWhatsapp}>
+                  <FontAwesome name="whatsapp" size={20} color="#FFF" />
+                  <Text style={styles.buttonText}>WhatsApp</Text>
+              </RectButton>
 
-        <RectButton style={styles.button} onPress={handleComposeMail}>
-          <Icon name="mail" size={20} color="#FFF" />
-          <Text style={styles.buttonText}>E-mail</Text>
-        </RectButton>
-      </View>
-    </SafeAreaView> 
-  );
+              <RectButton style={styles.button} onPress={handleComposeMail}>
+                  <Icon name="mail" size={20} color="#FFF" />
+                  <Text style={styles.buttonText}>E-mail</Text>
+              </RectButton>
+          </View>
+      </SafeAreaView>
+    );
 };
 
-  
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     },
   
     pointName: {
-      color: "#322153",
+      color: "#005bab",
       fontSize: 28,
       fontFamily: "Ubuntu_700Bold",
       marginTop: 24,
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
       lineHeight: 24,
       marginTop: 8,
-      color: "#6C6C80",
+      color: "#005bab",
     },
   
     address: {
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     },
   
     addressTitle: {
-      color: "#322153",
+      color: "#005bab",
       fontFamily: "Roboto_500Medium",
       fontSize: 16,
     },
@@ -137,7 +136,7 @@ const styles = StyleSheet.create({
       fontFamily: "Roboto_400Regular",
       lineHeight: 24,
       marginTop: 8,
-      color: "#6C6C80",
+      color: "#005bab",
     },
   
     footer: {
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
   
     button: {
       width: "48%",
-      backgroundColor: "#34CB79",
+      backgroundColor: "#005bab",
       borderRadius: 10,
       height: 50,
       flexDirection: "row",
@@ -167,4 +166,5 @@ const styles = StyleSheet.create({
     },
   });
 
-  export default Detail;
+
+export default Detail;

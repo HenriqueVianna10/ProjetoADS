@@ -1,23 +1,15 @@
 import React, { useState } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
-import {
-    View,
-    ImageBackground,
-    Text,
-    StyleSheet,
-    Image,
-    TextInput,
-    KeyboardAvoidingView, Platform
-  } from "react-native";
+import { View, ImageBackground, Text, Image, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 
 
 const Home = () => {
-  const [uf, setUF] = useState('');
+  const [uf, setUf] = useState('');
   const [city, setCity] = useState('');
-  const navigation = useNavigation();
 
+  const navigation = useNavigation();
 
   function handleNavigateToPoints(){
     navigation.navigate('Points', {
@@ -26,63 +18,57 @@ const Home = () => {
     });
   }
 
-
     return (
-            <KeyboardAvoidingView 
-            style={ {flex: 1 }} 
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-            <ImageBackground 
+      <KeyboardAvoidingView 
+        style={{ flex: 1 }} 
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <ImageBackground 
               source={require('../../assets/home-background.png')} 
               style={styles.container}
-              
-              >
-                <View style={styles.main}> 
-                  <Image source={require('../../assets/sus-logo.png')} />
-                    <View>
-                      <Text style={styles.title}>E-Vacina</Text>
-                      <Text style={styles.description}>Encontre Vacinas Na Sua Região</Text>
-                    </View>
-                </View>
-
-              <View style={styles.footer}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Digite a UF"
-                  value={uf}
-                  maxLength={2}
-                  autoCapitalize="characters"
-                  autoCorrect={false}
-                  onChangeText={setUF}
-                  />
-
-                <TextInput
-                  style={styles.input}
-                  placeholder="Digite a Cidade"
-                  value={city}
-                  autoCorrect={false}
-                  onChangeText={setCity}
-                  />
-
-                <RectButton style={styles.button} onPress={handleNavigateToPoints}> 
-                  <View style={styles.buttonIcon}> 
-                   <Text> 
-                     <Icon name="arrow-right"
-                           color="#FFF"
-                           size={24}
-                           />      
-                   </Text>
+              imageStyle={{ width: 640, height: 856}}
+          >
+                  <View style={styles.main}>
+                      <Image source={require('../../assets/sus-logo.png')} />
+                      <View>
+                        <Text style={styles.title}>E-Vacina</Text>
+                        <Text style={styles.description}>Encontre Vacinas Na Sua Região:</Text>
+                      </View>
                   </View>
-                  <Text style={styles.buttonText}>
-                    Entrar
-                  </Text>
-                </RectButton>
-              </View>
-            </ImageBackground>
-          </KeyboardAvoidingView>
-        );
-};
 
-export default Home;
+                  <View style={styles.footer}>
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="Digite a UF:"
+                        value={uf}
+                        maxLength={2}
+                        autoCapitalize="characters"
+                        autoCorrect={false}
+                        onChangeText={setUf}
+                    />
+
+                    <TextInput 
+                        style={styles.input}
+                        placeholder="Digite a Cidade:"
+                        value={city}
+                        autoCorrect={false}
+                        onChangeText={setCity}
+                    />
+
+                      <RectButton style={styles.button} onPress={handleNavigateToPoints}>
+                        <View style={styles.buttonIcon}>
+                          <Text>
+                            <Icon name="arrow-right" color="#FFF" size={24} />
+                          </Text>
+                        </View>
+                        <Text style={styles.buttonText}>
+                          Entrar
+                        </Text>
+                      </RectButton>
+                  </View>
+          </ImageBackground> 
+        </KeyboardAvoidingView>  
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -96,15 +82,15 @@ const styles = StyleSheet.create({
     },
   
     title: {
-      color: "#322153",
+      color: "#005bab",
       fontSize: 45,
       fontFamily: "Ubuntu_700Bold",
       maxWidth: 260,
-      marginTop: 190,
+      marginTop: 64,
     },
   
     description: {
-      color: "#322153",
+      color: "#005bab",
       fontSize: 19,
       marginTop: 20,
       fontFamily: "Roboto_400Regular",
@@ -121,12 +107,12 @@ const styles = StyleSheet.create({
       backgroundColor: "#FFF",
       borderRadius: 10,
       marginBottom: 8,
-      paddingHorizontal: 16,
+      paddingHorizontal: 24,
       fontSize: 16,
     },
   
     button: {
-      backgroundColor: "#34CB79",
+      backgroundColor: "#005bab",
       height: 60,
       flexDirection: "row",
       borderRadius: 10,
@@ -138,7 +124,7 @@ const styles = StyleSheet.create({
     buttonIcon: {
       height: 60,
       width: 60,
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      backgroundColor: "#4682B4",
       justifyContent: "center",
       alignItems: "center",
     },
@@ -152,3 +138,6 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
   });
+
+
+export default Home; 

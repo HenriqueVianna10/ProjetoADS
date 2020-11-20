@@ -23,7 +23,7 @@ const Home = () => {
                         <FiLogIn />
                     </span>
                     <strong> Cadastrar Novo Posto de Saúde</strong>
-                </Link>    
+                </Link>
             </main>          
            </div>
        </div>

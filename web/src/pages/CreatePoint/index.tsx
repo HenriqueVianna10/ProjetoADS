@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Map, TileLayer, Marker} from 'react-leaflet';
+import { Map, Marker, TileLayer } from "react-leaflet";
 import axios from 'axios';
 import { LeafletMouseEvent } from 'leaflet';
 import api from '../../services/api';
@@ -10,7 +10,7 @@ import './styles.css';
 
 import logo from '../../assets/sus-logo.png';
 
-interface  Item {
+interface Item {
     id: number;
     title: string;
     image_url: string;
@@ -24,8 +24,8 @@ interface IBGECityResponse {
     nome: string;
 }
 
-const CreatePoint = () => {
 
+const CreatePoint = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
@@ -53,31 +53,32 @@ const CreatePoint = () => {
         });
     }, []);
 
-
     useEffect(() => {
-        api.get('items').then(response =>{
+        api.get('items').then(response => {
             setItems(response.data);
         });
-    },[]);
+    }, []);
 
-    useEffect(() => {
+    useEffect(()=> {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados').then(response => {
             const ufInitials = response.data.map(uf => uf.sigla);
-
+            
             setUfs(ufInitials);
         });
     }, []);
 
     useEffect(() => {
-        if (selectedUf === '0') {
+        if(selectedUf === '0') {
             return;
         }
-        axios
-            .get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then(response => {
-            const cityNames = response.data.map(city => city.nome);
 
+        axios
+        .get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
+        .then(response => {
+            const cityNames = response.data.map(city => city.nome);
+            
             setCities(cityNames);
-        });     
+        });
     }, [selectedUf]);
 
     function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
@@ -85,7 +86,6 @@ const CreatePoint = () => {
 
         setSelectedUf(uf);
     }
-
 
     function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
         const city = (event.target.value);
@@ -147,18 +147,19 @@ const CreatePoint = () => {
 
 
     return (
-        <div id="page-create-point">
+        <div id= "page-create-point">
             <header>
-                <img src={logo} alt="EVacina" />
+                <img src={logo}  alt="E-Vacina" />
 
-                <Link to="/">
-                    <FiArrowLeft />
-                    Voltar Para Home
+                <Link to= "/">
+                  <FiArrowLeft />
+                    Voltar
                 </Link>
             </header>
 
             <form onSubmit={handleSubmit}>
-                <h1>Cadastrar Novo Posto</h1>
+                <h1>Cadastrar Posto de Saúde</h1>
+
                 <fieldset>
                     <legend>
                         <h2>Dados</h2>
@@ -194,79 +195,75 @@ const CreatePoint = () => {
                         />
                     </div> 
                  </div>   
-
                 </fieldset>
 
                 <fieldset>
                     <legend>
                         <h2>Endereço</h2>
-                        <span>Selecione o endereço no mapa </span>
+                        <span>Selecione o Endereço no Mapa</span>
                     </legend>
 
-                        <Map center={initialPosition} zoom={15}  onClick={handleMapClick}>
+                    <Map center={initialPosition} zoom={15} onclick={handleMapClick}>
                         <TileLayer 
-                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-
+                            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        /> 
                         <Marker position={selectedPosition}/>
-
-                        </Map>
+                    </Map >
 
                     <div className="field-group">
                         <div className="field">
                             <label htmlFor="uf">Estado</label>
-                            <select name="uf" 
-                                    id="uf" 
-                                    value={selectedUf} 
-                                    onChange={handleSelectUf}
-                                    >
-                                <option value="0">Selecione uma UF</option>
-                                 {ufs.map(uf => (
-                                      <option key={uf} value={uf}>{uf}</option>
-                                 ))}
+                            <select 
+                                name="uf" 
+                                id="uf" 
+                                value={selectedUf} 
+                                onChange={handleSelectUf}
+                            >
+                                <option value="0">Selecione Uma UF</option>
+                                {ufs.map(uf => (
+                                    <option key={uf} value={uf}>{uf}</option>
+                                ))}
                             </select>
-                        </div>
+                        </div> 
                         <div className="field">
                             <label htmlFor="city">Cidade</label>
                             <select 
-                            name="city" 
-                            id="city"
-                            value={selectedCity}
-                            onChange={handleSelectCity}
+                                name="city" 
+                                id="uf"
+                                value={selectedCity}
+                                onChange={handleSelectCity}
                             >
-                                <option value="0">Selecione uma Cidade</option>
-                                    {cities.map(city => (
-                                        <option key={city} value={city}>{city}</option>
-                                    ))}
+                                <option value="0">Selecione Uma Cidade</option>
+                                {cities.map(city => (
+                                    <option key={city} value={city}>{city}</option>
+                                ))}
                             </select>
-                        </div>
+                        </div>                         
                     </div>
                 </fieldset>
 
                 <fieldset>
                     <legend>
-                        <h2>Vacinas Disponíveis</h2>
-                        <span>Selecione uma ou mais Vacinas</span>
+                        <h2>Vacinas</h2>
+                        <span>Selecione Uma ou Mais Vacinas</span>
                     </legend>
 
                     <ul className="items-grid">
-                        {items.map(item =>(
-                        <li 
-                        key={item.id} 
-                        onClick={() => handleSelectItem(item.id)}
-                        className={selectedItems.includes(item.id) ? 'selected' : ''}
-                        >
-                            <img src={item.image_url} alt={item.title}/>
-                            <span>{item.title}</span>
-                        </li>
-                        ))}
-                    </ul>                  
+                        {items.map(item => (
+                            <li 
+                                key={item.id} 
+                                onClick={() => handleSelectItem(item.id)}
+                                className={selectedItems.includes(item.id) ? 'selected' : ''}
+                            >   
+                                <img src={item.image_url} alt={item.title} />
+                                <span>{item.title}</span>
+                            </li>         
+                        ))}  
+                    </ul>
                 </fieldset>
 
-                <button type="submit">
-                    Cadastrar Ponto de Saúde
-                </button>
+                <button type="submit">Cadastrar Posto</button>
             </form>
         </div>
     );
