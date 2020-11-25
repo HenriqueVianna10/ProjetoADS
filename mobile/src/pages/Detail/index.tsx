@@ -51,7 +51,7 @@ const Detail = () => {
         MailComposer.composeAsync({
           subject: 'Quer Ter Mais Informações?',
           recipients: [data.point.email], 
-        })
+        });
       }
     
 
